@@ -29,7 +29,7 @@ class GameField {
 
   constructor(
     private scene: Phaser.Scene,
-    private tileSize: number,
+    public tileSize: number,
     width: number,
     height: number
   ) {
@@ -166,7 +166,7 @@ export default class SnakeGameScene extends Phaser.Scene {
   private score = 0;
   private scoreText!: Phaser.GameObjects.Text;
   private apple!: Apple;
-  private goldenApple!: GoldenApple | null = null;
+  private goldenApple: GoldenApple | null = null;
   private goldenAppleSpawnChance = 0.1;
 
   constructor() {
