@@ -158,8 +158,20 @@ class GoldenApple extends Apple {
 
 // Main game scene
 export default class SnakeGameScene extends Phaser.Scene {
-  private tileSize!: number;
+  private snake!: Snake;
   private field!: GameField;
+  private tileSize!: number;
+  private lastMoveTime = 0;
+  private moveInterval = 200;
+  private score = 0;
+  private scoreText!: Phaser.GameObjects.Text;
+  private apple!: Apple;
+  private goldenApple: GoldenApple | null = null;
+  private goldenAppleSpawnChance = 0.1;
+
+  constructor() {
+    super({ key: 'SnakeGameScene' });
+  }
 
   create() {
     const minDimension = Math.min(this.scale.width, this.scale.height);
@@ -170,6 +182,8 @@ export default class SnakeGameScene extends Phaser.Scene {
     this.field = new GameField(this, this.tileSize, this.scale.width, this.scale.height);
     this.snake = new Snake(this, this.tileSize);
     this.apple = new Apple(this, this.field);
+    this.scoreText = this.add.text(10, 10, `Score: ${this.score}`, { fontSize: '20px', color: '#fff' });
+
     // Swipe control
     this.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
       const swipe = pointer.upX - pointer.downX || pointer.upY - pointer.downY;
