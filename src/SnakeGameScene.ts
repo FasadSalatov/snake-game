@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-
+const pixelRatio = window.devicePixelRatio || 1;
 // Tile class for each grid square
 class Tile {
   private tile: Phaser.GameObjects.Rectangle;
@@ -158,31 +158,18 @@ class GoldenApple extends Apple {
 
 // Main game scene
 export default class SnakeGameScene extends Phaser.Scene {
-  private snake!: Snake;
-  private field!: GameField;
   private tileSize!: number;
-  private lastMoveTime = 0;
-  private moveInterval = 200;
-  private score = 0;
-  private scoreText!: Phaser.GameObjects.Text;
-  private apple!: Apple;
-  private goldenApple: GoldenApple | null = null;
-  private goldenAppleSpawnChance = 0.1;
-
-  constructor() {
-    super({ key: 'SnakeGameScene' });
-  }
+  private field!: GameField;
 
   create() {
     const minDimension = Math.min(this.scale.width, this.scale.height);
-    this.tileSize = Math.floor(minDimension / 30);
+    // Adjust tile size based on DPI
+    this.tileSize = Math.floor((minDimension / 30) * pixelRatio);
 
-    // Centered game field
+    // Create the game field with adjusted tile size
     this.field = new GameField(this, this.tileSize, this.scale.width, this.scale.height);
     this.snake = new Snake(this, this.tileSize);
     this.apple = new Apple(this, this.field);
-    this.scoreText = this.add.text(10, 10, `Score: ${this.score}`, { fontSize: '20px', color: '#fff' });
-
     // Swipe control
     this.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
       const swipe = pointer.upX - pointer.downX || pointer.upY - pointer.downY;

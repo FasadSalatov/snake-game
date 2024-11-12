@@ -3,22 +3,20 @@ import SnakeGameScene from './SnakeGameScene';
 import { useEffect } from 'react';
 
 const Game = () => {
+  
   useEffect(() => {
     // Получаем коэффициент DPI
-    const dpi = window.devicePixelRatio || 1;
-
+    const pixelRatio = window.devicePixelRatio || 1;
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
-      width: window.innerWidth * dpi,
-      height: window.innerHeight * dpi,
-      scale: {
-        mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH
-      },
+      width: window.innerWidth * pixelRatio,
+      height: window.innerHeight * pixelRatio,
       scene: [SnakeGameScene],
-      pixelArt: true,  // Сохраняет четкость пикселей
+      scale: {
+        mode: Phaser.Scale.RESIZE,  // Adapts to window resizing
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+      },
     };
-
     // Создаем игру
     const game = new Phaser.Game(config);
 
