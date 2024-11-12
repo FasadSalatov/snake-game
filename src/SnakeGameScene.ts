@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-const pixelRatio = window.devicePixelRatio || 1;
+
 // Tile class for each grid square
 class Tile {
   private tile: Phaser.GameObjects.Rectangle;
@@ -175,10 +175,9 @@ export default class SnakeGameScene extends Phaser.Scene {
 
   create() {
     const minDimension = Math.min(this.scale.width, this.scale.height);
-    // Adjust tile size based on DPI
-    this.tileSize = Math.floor((minDimension / 30) * pixelRatio);
+    this.tileSize = Math.floor(minDimension / 30);
 
-    // Create the game field with adjusted tile size
+    // Centered game field
     this.field = new GameField(this, this.tileSize, this.scale.width, this.scale.height);
     this.snake = new Snake(this, this.tileSize);
     this.apple = new Apple(this, this.field);
@@ -200,6 +199,9 @@ export default class SnakeGameScene extends Phaser.Scene {
       this.snake.move();
 
       const headPos = this.snake.getHeadPosition();
+headPos.x = Math.round(headPos.x);
+headPos.y = Math.round(headPos.y);
+
       if (!this.field.isWithinBounds(headPos.x, headPos.y) || this.snake.checkSelfCollision()) {
         this.scene.restart();
         this.score = 0;
@@ -207,15 +209,21 @@ export default class SnakeGameScene extends Phaser.Scene {
       }
 
       const applePos = this.apple.getPosition();
-      if (headPos.x === applePos.x && headPos.y === applePos.y) {
-        this.apple.consume(this.snake);
-        this.updateScore();
-      }
+if (Math.abs(headPos.x - applePos.x) < this.tileSize && 
+    Math.abs(headPos.y - applePos.y) < this.tileSize) {
+  this.apple.consume(this.snake);
+  this.updateScore();
+}
 
-      if (this.goldenApple && headPos.x === this.goldenApple.getPosition().x && headPos.y === this.goldenApple.getPosition().y) {
-        this.goldenApple.consume(this.snake);
-        this.updateScore(3);
-      }
+if (this.goldenApple) {
+  const goldenApplePos = this.goldenApple.getPosition();
+  if (Math.abs(headPos.x - goldenApplePos.x) < this.tileSize && 
+      Math.abs(headPos.y - goldenApplePos.y) < this.tileSize) {
+    this.goldenApple.consume(this.snake);
+    this.updateScore(3);
+  }
+}
+
 
       if (!this.goldenApple && Math.random() < this.goldenAppleSpawnChance) {
         this.goldenApple = new GoldenApple(this, this.field);

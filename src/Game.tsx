@@ -6,17 +6,19 @@ const Game = () => {
   
   useEffect(() => {
     // Получаем коэффициент DPI
-    const pixelRatio = window.devicePixelRatio || 1;
+    const scale = window.devicePixelRatio || 1;
     const config: Phaser.Types.Core.GameConfig = {
+      pixelArt: true,
       type: Phaser.AUTO,
-      width: window.innerWidth * pixelRatio,
-      height: window.innerHeight * pixelRatio,
+      width: window.innerWidth * scale,
+      height: window.innerHeight * scale,
       scene: [SnakeGameScene],
       scale: {
-        mode: Phaser.Scale.RESIZE,  // Adapts to window resizing
-        autoCenter: Phaser.Scale.CENTER_BOTH,
-      },
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+      }
     };
+    
     // Создаем игру
     const game = new Phaser.Game(config);
 
