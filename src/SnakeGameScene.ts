@@ -176,7 +176,7 @@ export default class SnakeGameScene extends Phaser.Scene {
   create() {
     const minDimension = Math.min(this.scale.width, this.scale.height);
     // Adjust tile size based on DPI
-    this.tileSize = Math.floor((minDimension / 15) * pixelRatio);
+    this.tileSize = Math.floor((minDimension / 55) * pixelRatio);
 
     // Create the game field with adjusted tile size
     this.field = new GameField(this, this.tileSize, this.scale.width, this.scale.height);
