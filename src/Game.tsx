@@ -5,29 +5,31 @@ import { useEffect } from 'react';
 const Game = () => {
   
   useEffect(() => {
-    // Получаем коэффициент DPI
-    const scale = window.devicePixelRatio || 1;
     const config: Phaser.Types.Core.GameConfig = {
       pixelArt: true,
       type: Phaser.AUTO,
-      width: window.innerWidth * scale,
-      height: window.innerHeight * scale,
+      width: window.innerWidth,
+      height: window.innerHeight,
       scene: [SnakeGameScene],
       scale: {
-        mode: Phaser.Scale.RESIZE,
-        autoCenter: Phaser.Scale.CENTER_BOTH
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
       }
     };
-    
+
     // Создаем игру
     const game = new Phaser.Game(config);
 
-    // Устанавливаем масштаб для игрового контейнера в зависимости от DPI
-    game.canvas.style.width = `${window.innerWidth}px`;
-    game.canvas.style.height = `${window.innerHeight}px`;
+    const resizeGame = () => {
+      game.scale.resize(window.innerWidth, window.innerHeight);
+    };
+
+    // Слушатель события resize
+    window.addEventListener('resize', resizeGame);
 
     return () => {
       game.destroy(true);
+      window.removeEventListener('resize', resizeGame);
     };
   }, []);
 
